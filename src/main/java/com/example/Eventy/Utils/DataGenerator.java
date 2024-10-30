@@ -17,7 +17,7 @@ import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
-public class DataGenerator { //implements CommandLineRunner { décommenter si on veut éxecuter au démarrage
+public class DataGenerator implements CommandLineRunner { // décommenter si on veut éxecuter au démarrage
 
     private final EventService eventService;
     private final UserService userService; // Ajout de UserService
@@ -31,13 +31,18 @@ public class DataGenerator { //implements CommandLineRunner { décommenter si on
 
     private static final List<String> EVENT_TYPES = List.of("Concert", "Exhibition", "Conference", "Festival", "Workshop");
 
-   /* @Override décommenter si on veut utilsier au début
+    @Override //décommenter si on veut utilsier au début
     public void run(String... args) throws Exception {
         generateUsers(10); // Générez 10 utilisateurs
         generateEvents(10); // Générez 10 événements
-    }*/
+    }
 
     public void generateEvents(int count) {
+
+        if (!eventService.getAllEvents().isEmpty()) {
+            System.out.println("Des événements existent déjà. Génération annulée.");
+            return;
+        }
         List<EventDTO> events = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -64,6 +69,10 @@ public class DataGenerator { //implements CommandLineRunner { décommenter si on
 
     // Méthode pour générer des utilisateurs aléatoires
     public void generateUsers(int count) {
+        if (!userService.getAllUsers().isEmpty()) {
+            System.out.println("Des utilisateurs existent déjà. Génération annulée.");
+            return;
+        }
         List<UserDTO> users = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
